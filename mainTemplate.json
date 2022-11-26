@@ -110,6 +110,7 @@
 			"name": "vmADCS",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "2021-04-01",
+      "dependsOn": ["vnet"],
 			"properties": {
 				"mode": "Incremental",
 				"templateLink": {
@@ -139,6 +140,7 @@
 			"name": "vmNPS",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "2021-04-01",
+      "dependsOn": ["vnet"],
 			"properties": {
 				"mode": "Incremental",
 				"templateLink": {
@@ -168,6 +170,7 @@
 			"name": "vmRRAS",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "2021-04-01",
+      "dependsOn": ["vnet"],
 			"properties": {
 				"mode": "Incremental",
 				"templateLink": {
