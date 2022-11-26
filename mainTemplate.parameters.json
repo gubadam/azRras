@@ -9,7 +9,7 @@
                 "subnetName": "snet-rras-01",
                 "subnetIPRange": "10.0.0.0/24",
                 "adminUsername": "adminUsername",
-                "adminPassword": "adminPassword"
+                "adminPassword": "adminPassword123$"
             }
         },
         "ADDSParameters": {
@@ -18,7 +18,7 @@
                 "dnsPrefix": "ad.local",
                 "ipAddress": "10.0.0.4",
                 "adminUsername": "adminUsername",
-                "adminPassword": "adminPassword"
+                "adminPassword": "adminPassword123"
             }
         },
         "ADCSParameters": {
@@ -26,7 +26,7 @@
                 "vmName": "vmAdcs",
                 "ipAddress": "10.0.0.5",
                 "adminUsername": "adminUsername",
-                "adminPassword": "adminPassword"
+                "adminPassword": "adminPassword123"
             }
         },
         "NPSParameters": {
@@ -34,7 +34,7 @@
                 "vmName": "vmNps",
                 "ipAddress": "10.0.0.6",
                 "adminUsername": "adminUsername",
-                "adminPassword": "adminPassword"
+                "adminPassword": "adminPassword123"
             }
         },
         "RRASParameters": {
@@ -42,7 +42,7 @@
                 "vmName": "vmRras",
                 "ipAddress": "10.0.0.7",
                 "adminUsername": "adminUsername",
-                "adminPassword": "adminPassword"
+                "adminPassword": "adminPassword123"
             }
         }
     }
