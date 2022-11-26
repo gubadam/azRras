@@ -59,7 +59,7 @@
 			"properties": {
 				"mode": "Incremental",
 				"templateLink": {
-					"relativePath": "./templates/vnet.json"
+					"relativePath": "templates/vnet.json"
 				},
 				"parameters": {
           "vnetName": {
@@ -85,7 +85,7 @@
 			"properties": {
 				"mode": "Incremental",
 				"templateLink": {
-					"relativePath": "./templates/vm.json"
+					"relativePath": "templates/vm.json"
 				},
 				"parameters": {
           "vmName": {
@@ -106,27 +106,6 @@
 				}
 			}
 		},
-    {
-      "name": "vmADDS/createADDSDomain",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2021-03-01",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', 'vmADDS')]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Powershell",
-        "type": "DSC",
-        "typeHandlerVersion": "2.9",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "modulesUrl": "[concat('artifactsLocation', '/DSCModules/dsc.zip')]",
-          "sasToken": "artifactsLocationSasToken",
-          "configurationFunction": "Configure"
-        },
-        "protectedSettings": {}
-      }
-    },
 		{
 			"name": "vmADCS",
 			"type": "Microsoft.Resources/deployments",
@@ -134,7 +113,7 @@
 			"properties": {
 				"mode": "Incremental",
 				"templateLink": {
-					"relativePath": "./templates/vm.json",
+					"relativePath": "templates/vm.json",
 					"contentVersion": "1.0.0.0"
 				},
 				"parameters": {
@@ -156,30 +135,6 @@
         }
 			}
 		},
-    {
-      "name": "vmADCS/createADCS",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2021-03-01",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "displayName": "vmADCS/createADCS"
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', 'vmADCS')]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Powershell",
-        "type": "DSC",
-        "typeHandlerVersion": "2.9",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "modulesUrl": "[concat('artifactsLocation', '/DSCModules/dsc.zip')]",
-          "sasToken": "artifactsLocationSasToken",
-          "configurationFunction": "Configure"
-        },
-        "protectedSettings": {}
-      }
-    },
 		{
 			"name": "vmNPS",
 			"type": "Microsoft.Resources/deployments",
@@ -187,7 +142,7 @@
 			"properties": {
 				"mode": "Incremental",
 				"templateLink": {
-					"relativePath": "./templates/vm.json",
+					"relativePath": "templates/vm.json",
 					"contentVersion": "1.0.0.0"
 				},
 				"parameters": {
@@ -209,30 +164,6 @@
         }
 			}
 		},
-    {
-      "name": "vmNPS/createNPS",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2021-03-01",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "displayName": "vmNPS/createNPS"
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', 'vmNPS')]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Powershell",
-        "type": "DSC",
-        "typeHandlerVersion": "2.9",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "modulesUrl": "[concat('artifactsLocation', '/DSCModules/dsc.zip')]",
-          "sasToken": "artifactsLocationSasToken",
-          "configurationFunction": "Configure"
-        },
-        "protectedSettings": {}
-      }
-    },
 		{
 			"name": "vmRRAS",
 			"type": "Microsoft.Resources/deployments",
@@ -240,7 +171,7 @@
 			"properties": {
 				"mode": "Incremental",
 				"templateLink": {
-					"relativePath": "./templates/vm.json",
+					"relativePath": "templates/vm.json",
 					"contentVersion": "1.0.0.0"
 				},
 				"parameters": {
@@ -261,30 +192,6 @@
           }
         }
 			}
-		},
-    {
-      "name": "vmRRAS/createRRAS",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2021-03-01",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "displayName": "vmRRAS/createRRAS"
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', 'vmRRAS')]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Powershell",
-        "type": "DSC",
-        "typeHandlerVersion": "2.9",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "modulesUrl": "[concat('artifactsLocation', '/DSCModules/dsc.zip')]",
-          "sasToken": "artifactsLocationSasToken",
-          "configurationFunction": "Configure"
-        },
-        "protectedSettings": {}
-      }
-    }
+		}
 	]
 }

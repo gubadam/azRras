@@ -12,9 +12,9 @@ To deploy Azure Resource Manager template run:
 $deploymentParams = @{
   Name = "<deployment-name>"
   ResourceGroupName = "<resource-group-name>"
-  TemplateFile = "./mainTemplate.json"
-  TemplateParameterFile = "./mainTemplate.parameters.json"
-  }
+  TemplateFile = "https://raw.githubusercontent.com/gubadam/azRras/main/mainTemplate.json"
+  TemplateParameterFile = "https://raw.githubusercontent.com/gubadam/azRras/main/mainTemplate.parameters.json"
+}
 New-AzResourceGroupDeployment @deploymentParams
 ```
 
