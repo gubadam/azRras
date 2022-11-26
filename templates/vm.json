@@ -20,7 +20,7 @@
     },
     "resources": [
     {
-        "name": "vm-NetworkInterface",
+        "name": "[concat(parameters('vmName'),'-netInt01')]",
         "type": "Microsoft.Network/networkInterfaces",
         "apiVersion": "2020-11-01",
         "location": "[resourceGroup().location]",
@@ -48,7 +48,7 @@
         "location": "[resourceGroup().location]",
         "dependsOn": [
             // "[resourceId('Microsoft.Storage/storageAccounts', toLower('windowsVM1storage'))]",
-            "[resourceId('Microsoft.Network/networkInterfaces', 'vm-NetworkInterface')]"
+            "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmName'),'-netInt01'))]"
         ],
         "properties": {
             "hardwareProfile": {
