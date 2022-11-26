@@ -1,0 +1,290 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+    "VnetParameters": {
+      "type": "object",
+      "defaultValue": {
+        "vnetName": "vnet-rras-01",
+        "vnetIPRange": "10.0.0.0/16",
+        "subnetName": "snet-rras-01",
+        "subnetIPRange": "10.0.0.0/24",
+        "adminUsername": "adminUsername",
+        "adminPassword": "adminPassword"
+      }
+    },
+		"ADDSParameters": {
+			"type": "object",
+			"defaultValue": {
+        "vmName": "vmAdds",
+        "dnsPrefix": "ad.local",
+        "ipAddress": "10.0.0.4",
+        "adminUsername": "adminUsername",
+        "adminPassword": "adminPassword"
+      }
+		},
+		"ADCSParameters": {
+			"type": "object",
+			"defaultValue": {
+        "vmName": "vmAdcs",
+        "ipAddress": "10.0.0.5",
+        "adminUsername": "adminUsername",
+        "adminPassword": "adminPassword"
+      }
+		},
+		"NPSParameters": {
+			"type": "object",
+			"defaultValue": {
+        "vmName": "vmNps",
+        "ipAddress": "10.0.0.6",
+        "adminUsername": "adminUsername",
+        "adminPassword": "adminPassword"
+      }
+		},
+		"RRASParameters": {
+			"type": "object",
+			"defaultValue": {
+        "vmName": "vmRras",
+        "ipAddress": "10.0.0.7",
+        "adminUsername": "adminUsername",
+        "adminPassword": "adminPassword"
+      }
+    }
+	},
+	"resources": [
+		{
+			"name": "vnet",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2021-04-01",
+			"properties": {
+				"mode": "Incremental",
+				"templateLink": {
+					"relativePath": "./templates/vnet.json"
+				},
+				"parameters": {
+          "vnetName": {
+              "value": "[parameters('VnetParameters').vnetName]"
+          },
+          "vnetIPRange": {
+              "value": "[parameters('VnetParameters').vnetIPRange]"
+          },
+          "snetName": {
+              "value": "[parameters('VnetParameters').subnetName]"
+          },
+          "snetIPRange": {
+              "value": "[parameters('VnetParameters').subnetIPRange]"
+          }
+				}
+			}
+		},
+		{
+			"name": "vmADDS",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2021-04-01",
+			"dependsOn": ["[resourceId('Microsoft.Resources/deployments', 'vnet')]"],
+			"properties": {
+				"mode": "Incremental",
+				"templateLink": {
+					"relativePath": "./templates/vm.json"
+				},
+				"parameters": {
+          "vmName": {
+            "value": "[parameters('ADDSParameters').vmName]"
+          },
+          "vmIp": {
+            "value": "[parameters('ADDSParameters').ipAddress]"
+          },
+          "snetId": {
+            "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('VnetParameters').vnetName, parameters('VnetParameters').subnetName)]"
+          },
+          "adminUsername": {
+            "value": "[parameters('ADDSParameters').adminUsername]"
+          },
+          "adminPassword": {
+            "value": "[parameters('ADDSParameters').adminPassword]"
+          }
+				}
+			}
+		},
+    {
+      "name": "vmADDS/createADDSDomain",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2021-03-01",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', 'vmADDS')]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.9",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "modulesUrl": "[concat('artifactsLocation', '/DSCModules/dsc.zip')]",
+          "sasToken": "artifactsLocationSasToken",
+          "configurationFunction": "Configure"
+        },
+        "protectedSettings": {}
+      }
+    },
+		{
+			"name": "vmADCS",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2021-04-01",
+			"properties": {
+				"mode": "Incremental",
+				"templateLink": {
+					"relativePath": "./templates/vm.json",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+          "vmName": {
+            "value": "[parameters('ADCSParameters').vmName]"
+          },
+          "vmIp": {
+            "value": "[parameters('ADCSParameters').ipAddress]"
+          },
+          "snetId": {
+            "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('VnetParameters').vnetName, parameters('VnetParameters').subnetName)]"
+          },
+          "adminUsername": {
+            "value": "[parameters('ADCSParameters').adminUsername]"
+          },
+          "adminPassword": {
+            "value": "[parameters('ADCSParameters').adminPassword]"
+          }
+        }
+			}
+		},
+    {
+      "name": "vmADCS/createADCS",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2021-03-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "vmADCS/createADCS"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', 'vmADCS')]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.9",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "modulesUrl": "[concat('artifactsLocation', '/DSCModules/dsc.zip')]",
+          "sasToken": "artifactsLocationSasToken",
+          "configurationFunction": "Configure"
+        },
+        "protectedSettings": {}
+      }
+    },
+		{
+			"name": "vmNPS",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2021-04-01",
+			"properties": {
+				"mode": "Incremental",
+				"templateLink": {
+					"relativePath": "./templates/vm.json",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+          "vmName": {
+            "value": "[parameters('NPSParameters').vmName]"
+          },
+          "vmIp": {
+            "value": "[parameters('NPSParameters').ipAddress]"
+          },
+          "snetId": {
+            "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('VnetParameters').vnetName, parameters('VnetParameters').subnetName)]"
+          },
+          "adminUsername": {
+            "value": "[parameters('NPSParameters').adminUsername]"
+          },
+          "adminPassword": {
+            "value": "[parameters('NPSParameters').adminPassword]"
+          }
+        }
+			}
+		},
+    {
+      "name": "vmNPS/createNPS",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2021-03-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "vmNPS/createNPS"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', 'vmNPS')]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.9",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "modulesUrl": "[concat('artifactsLocation', '/DSCModules/dsc.zip')]",
+          "sasToken": "artifactsLocationSasToken",
+          "configurationFunction": "Configure"
+        },
+        "protectedSettings": {}
+      }
+    },
+		{
+			"name": "vmRRAS",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2021-04-01",
+			"properties": {
+				"mode": "Incremental",
+				"templateLink": {
+					"relativePath": "./templates/vm.json",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+          "vmName": {
+            "value": "[parameters('RRASParameters').vmName]"
+          },
+          "vmIp": {
+            "value": "[parameters('RRASParameters').ipAddress]"
+          },
+          "snetId": {
+            "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('VnetParameters').vnetName, parameters('VnetParameters').subnetName)]"
+          },
+          "adminUsername": {
+            "value": "[parameters('RRASParameters').adminUsername]"
+          },
+          "adminPassword": {
+            "value": "[parameters('RRASParameters').adminPassword]"
+          }
+        }
+			}
+		},
+    {
+      "name": "vmRRAS/createRRAS",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2021-03-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "vmRRAS/createRRAS"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', 'vmRRAS')]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.9",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "modulesUrl": "[concat('artifactsLocation', '/DSCModules/dsc.zip')]",
+          "sasToken": "artifactsLocationSasToken",
+          "configurationFunction": "Configure"
+        },
+        "protectedSettings": {}
+      }
+    }
+	]
+}

@@ -1,0 +1,49 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VnetParameters": {
+            "value": {
+                "vnetName": "vnet-rras-01",
+                "vnetIPRange": "10.0.0.0/16",
+                "subnetName": "snet-rras-01",
+                "subnetIPRange": "10.0.0.0/24",
+                "adminUsername": "adminUsername",
+                "adminPassword": "adminPassword"
+            }
+        },
+        "ADDSParameters": {
+            "value": {
+                "vmName": "vmAdds",
+                "dnsPrefix": "ad.local",
+                "ipAddress": "10.0.0.4",
+                "adminUsername": "adminUsername",
+                "adminPassword": "adminPassword"
+            }
+        },
+        "ADCSParameters": {
+            "value": {
+                "vmName": "vmAdcs",
+                "ipAddress": "10.0.0.5",
+                "adminUsername": "adminUsername",
+                "adminPassword": "adminPassword"
+            }
+        },
+        "NPSParameters": {
+            "value": {
+                "vmName": "vmNps",
+                "ipAddress": "10.0.0.6",
+                "adminUsername": "adminUsername",
+                "adminPassword": "adminPassword"
+            }
+        },
+        "RRASParameters": {
+            "value": {
+                "vmName": "vmRras",
+                "ipAddress": "10.0.0.7",
+                "adminUsername": "adminUsername",
+                "adminPassword": "adminPassword"
+            }
+        }
+    }
+}
