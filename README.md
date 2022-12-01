@@ -6,13 +6,13 @@ Powershell since version 7.2 no longer comes bundled with PSDesiredStateConfigur
 Install-Module -Name PSDesiredStateConfiguration -Repository PSGallery
 ```
 
-## ARM template deployment
-To deploy Azure Resource Manager template run:
+## Bicep template deployment
+To deploy Bicep template run:
 ```Powershell
 $deploymentParams = @{
   Name = "<deployment-name>"
   ResourceGroupName = "<resource-group-name>"
-  TemplateFile = "https://raw.githubusercontent.com/gubadam/azRras/main/mainTemplate.json"
+  TemplateFile = "https://raw.githubusercontent.com/gubadam/azRras/main/mainTemplate.bicep"
   TemplateParameterFile = "https://raw.githubusercontent.com/gubadam/azRras/main/mainTemplate.parameters.json"
 }
 New-AzResourceGroupDeployment @deploymentParams
