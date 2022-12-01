@@ -33,7 +33,7 @@ param RRASParameters object = {
 param location string = resourceGroup().location
 
 module vnet 'templates/vnet.bicep' = {
-  name: 'vnet'
+  name: '${az.deployment().name}-vnet'
   params: {
     vnetName: VnetParameters.vnetName
     vnetIPRange: VnetParameters.vnetIPRange
@@ -44,7 +44,7 @@ module vnet 'templates/vnet.bicep' = {
 }
 
 module vmADDS 'templates/vm.bicep' = {
-  name: 'vmADDS'
+  name: '${az.deployment().name}-vmADDS'
   params: {
     vmName: ADDSParameters.vmName
     vmIp: ADDSParameters.ipAddress
@@ -60,7 +60,7 @@ module vmADDS 'templates/vm.bicep' = {
 }
 
 module vmADCS 'templates/vm.bicep' = {
-  name: 'vmADCS'
+  name: '${az.deployment().name}-vmADCS'
   params: {
     vmName: ADCSParameters.vmName
     vmIp: ADCSParameters.ipAddress
@@ -78,7 +78,7 @@ module vmADCS 'templates/vm.bicep' = {
 }
 
 module vmNPS 'templates/vm.bicep' = {
-  name: 'vmNPS'
+  name: '${az.deployment().name}-vmNPS'
   params: {
     vmName: NPSParameters.vmName
     vmIp: NPSParameters.ipAddress
@@ -94,7 +94,7 @@ module vmNPS 'templates/vm.bicep' = {
 }
 
 module vmRRAS 'templates/vm.bicep' = {
-  name: 'vmRRAS'
+  name: '${az.deployment().name}-vmRRAS'
   params: {
     vmName: RRASParameters.vmName
     vmIp: RRASParameters.ipAddress
