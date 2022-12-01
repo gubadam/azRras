@@ -2,6 +2,7 @@ param vmName string
 param vmIp string
 param snetId string
 param adminUsername string
+param location string
 
 param createPublicIP bool
 
@@ -10,7 +11,7 @@ param adminPassword string
 
 resource publicIPAddress 'Microsoft.Network/publicIPAddresses@2019-11-01' = if (createPublicIP) {
   name: '${vmName}-pip01'
-  location: resourceGroup().location
+  location: location
   properties: {
     publicIPAllocationMethod: 'Dynamic'
   }
@@ -32,7 +33,7 @@ var privateIpProps = {
 
 resource vmName_netInt01 'Microsoft.Network/networkInterfaces@2020-11-01' = {
   name: '${vmName}-netInt01'
-  location: resourceGroup().location
+  location: location
   properties: {
     ipConfigurations: [
       {
@@ -46,7 +47,7 @@ resource vmName_netInt01 'Microsoft.Network/networkInterfaces@2020-11-01' = {
 
 resource vm 'Microsoft.Compute/virtualMachines@2021-03-01' = {
   name: vmName
-  location: resourceGroup().location
+  location: location
   properties: {
     hardwareProfile: {
       vmSize: 'Standard_D2s_v3'

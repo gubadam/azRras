@@ -32,6 +32,8 @@ param RRASParameters object = {
   adminPassword: 'adminPassword'
 }
 
+param location string = resourceGroup().location
+
 module vnet 'templates/vnet.bicep' = {
   name: 'vnet'
   params: {
@@ -39,6 +41,7 @@ module vnet 'templates/vnet.bicep' = {
     vnetIPRange: VnetParameters.vnetIPRange
     snetName: VnetParameters.subnetName
     snetIPRange: VnetParameters.subnetIPRange
+    location: location
   }
 }
 
@@ -51,6 +54,7 @@ module vmADDS 'templates/vm.bicep' = {
     adminUsername: ADDSParameters.adminUsername
     adminPassword: ADDSParameters.adminPassword
     createPublicIP: false
+    location: location
   }
   dependsOn: [
     vnet
@@ -66,6 +70,7 @@ module vmADCS 'templates/vm.bicep' = {
     adminUsername: ADCSParameters.adminUsername
     adminPassword: ADCSParameters.adminPassword
     createPublicIP: true
+    location: location
   }
   dependsOn: [
     vnet
@@ -81,6 +86,7 @@ module vmNPS 'templates/vm.bicep' = {
     adminUsername: NPSParameters.adminUsername
     adminPassword: NPSParameters.adminPassword
     createPublicIP: false
+    location: location
   }
   dependsOn: [
     vnet
@@ -96,6 +102,7 @@ module vmRRAS 'templates/vm.bicep' = {
     adminUsername: RRASParameters.adminUsername
     adminPassword: RRASParameters.adminPassword
     createPublicIP: true
+    location: location
   }
   dependsOn: [
     vnet
