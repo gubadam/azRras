@@ -23,7 +23,7 @@ var publicIpProps = {
   publicIPAddress: {
     id: publicIPAddress.id
   }
-  applicationSecurityGroups: createPublicIP ? [asgRdpId, asgVpnId] : []
+  applicationSecurityGroups: createPublicIP ? [{id: asgRdpId}, {id: asgVpnId}] : []
 }
 
 var privateIpProps = {

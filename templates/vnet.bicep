@@ -29,7 +29,9 @@ resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2019-11-0
           destinationPortRange: '443'
           sourceAddressPrefix: '*'
           destinationApplicationSecurityGroups: [
-            asgVPN
+            {
+              id: asgVPN.id
+            }
           ]
           access: 'Allow'
           priority: 100
@@ -44,7 +46,9 @@ resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2019-11-0
           destinationPortRange: '3389'
           sourceAddressPrefix: '*'
           destinationApplicationSecurityGroups: [
-            asgRDP
+            {
+              id: asgRDP.id
+            }
           ]
           access: 'Allow'
           priority: 101
@@ -71,7 +75,9 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
         name: snetName
         properties: {
           addressPrefix: snetIPRange
-          networkSecurityGroup: networkSecurityGroup
+          networkSecurityGroup: {
+            id: networkSecurityGroup.id
+          }
         }
       }
     ]

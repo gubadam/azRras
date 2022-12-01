@@ -68,6 +68,8 @@ module vmADCS 'templates/vm.bicep' = {
     adminUsername: ADCSParameters.adminUsername
     adminPassword: ADCSParameters.adminPassword
     createPublicIP: true
+    asgVpnId: vnet.outputs.asgVpnId
+    asgRdpId: vnet.outputs.asgRdpId
     location: location
   }
   dependsOn: [
@@ -100,6 +102,8 @@ module vmRRAS 'templates/vm.bicep' = {
     adminUsername: RRASParameters.adminUsername
     adminPassword: RRASParameters.adminPassword
     createPublicIP: true
+    asgVpnId: vnet.outputs.asgVpnId
+    asgRdpId: vnet.outputs.asgRdpId
     location: location
   }
   dependsOn: [
