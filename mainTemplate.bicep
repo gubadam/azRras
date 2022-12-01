@@ -3,8 +3,6 @@ param VnetParameters object = {
   vnetIPRange: '10.0.0.0/16'
   subnetName: 'snet-rras-01'
   subnetIPRange: '10.0.0.0/24'
-  adminUsername: 'adminUsername'
-  adminPassword: 'adminPassword'
 }
 param ADDSParameters object = {
   vmName: 'vmAdds'
