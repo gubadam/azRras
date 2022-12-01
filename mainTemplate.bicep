@@ -3,8 +3,6 @@ param VnetParameters object = {
   vnetIPRange: '10.0.0.0/16'
   subnetName: 'snet-rras-01'
   subnetIPRange: '10.0.0.0/24'
-  adminUsername: 'adminUsername'
-  adminPassword: 'adminPassword'
 }
 param ADDSParameters object = {
   vmName: 'vmAdds'
@@ -32,24 +30,29 @@ param RRASParameters object = {
   adminPassword: 'adminPassword'
 }
 
+param location string = resourceGroup().location
+
 module vnet 'templates/vnet.bicep' = {
-  name: 'vnet'
+  name: '${az.deployment().name}-vnet'
   params: {
     vnetName: VnetParameters.vnetName
     vnetIPRange: VnetParameters.vnetIPRange
     snetName: VnetParameters.subnetName
     snetIPRange: VnetParameters.subnetIPRange
+    location: location
   }
 }
 
 module vmADDS 'templates/vm.bicep' = {
-  name: 'vmADDS'
+  name: '${az.deployment().name}-vmADDS'
   params: {
     vmName: ADDSParameters.vmName
     vmIp: ADDSParameters.ipAddress
     snetId: resourceId('Microsoft.Network/virtualNetworks/subnets', VnetParameters.vnetName, VnetParameters.subnetName)
     adminUsername: ADDSParameters.adminUsername
     adminPassword: ADDSParameters.adminPassword
+    createPublicIP: false
+    location: location
   }
   dependsOn: [
     vnet
@@ -57,13 +60,17 @@ module vmADDS 'templates/vm.bicep' = {
 }
 
 module vmADCS 'templates/vm.bicep' = {
-  name: 'vmADCS'
+  name: '${az.deployment().name}-vmADCS'
   params: {
     vmName: ADCSParameters.vmName
     vmIp: ADCSParameters.ipAddress
     snetId: resourceId('Microsoft.Network/virtualNetworks/subnets', VnetParameters.vnetName, VnetParameters.subnetName)
     adminUsername: ADCSParameters.adminUsername
     adminPassword: ADCSParameters.adminPassword
+    createPublicIP: true
+    asgVpnId: vnet.outputs.asgVpnId
+    asgRdpId: vnet.outputs.asgRdpId
+    location: location
   }
   dependsOn: [
     vnet
@@ -71,13 +78,15 @@ module vmADCS 'templates/vm.bicep' = {
 }
 
 module vmNPS 'templates/vm.bicep' = {
-  name: 'vmNPS'
+  name: '${az.deployment().name}-vmNPS'
   params: {
     vmName: NPSParameters.vmName
     vmIp: NPSParameters.ipAddress
     snetId: resourceId('Microsoft.Network/virtualNetworks/subnets', VnetParameters.vnetName, VnetParameters.subnetName)
     adminUsername: NPSParameters.adminUsername
     adminPassword: NPSParameters.adminPassword
+    createPublicIP: false
+    location: location
   }
   dependsOn: [
     vnet
@@ -85,13 +94,17 @@ module vmNPS 'templates/vm.bicep' = {
 }
 
 module vmRRAS 'templates/vm.bicep' = {
-  name: 'vmRRAS'
+  name: '${az.deployment().name}-vmRRAS'
   params: {
     vmName: RRASParameters.vmName
     vmIp: RRASParameters.ipAddress
     snetId: resourceId('Microsoft.Network/virtualNetworks/subnets', VnetParameters.vnetName, VnetParameters.subnetName)
     adminUsername: RRASParameters.adminUsername
     adminPassword: RRASParameters.adminPassword
+    createPublicIP: true
+    asgVpnId: vnet.outputs.asgVpnId
+    asgRdpId: vnet.outputs.asgRdpId
+    location: location
   }
   dependsOn: [
     vnet
