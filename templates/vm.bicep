@@ -3,8 +3,32 @@ param vmIp string
 param snetId string
 param adminUsername string
 
+param createPublicIP bool
+
 @secure()
 param adminPassword string
+
+resource publicIPAddress 'Microsoft.Network/publicIPAddresses@2019-11-01' = if (createPublicIP) {
+  name: '${vmName}-pip01'
+  location: resourceGroup().location
+  properties: {
+    publicIPAllocationMethod: 'Dynamic'
+  }
+}
+
+var publicIpProps = {
+  publicIPAddress: {
+    id: publicIPAddress.id
+  }
+}
+
+var privateIpProps = {
+  privateIPAllocationMethod: 'Static'
+  subnet: {
+    id: snetId
+  }
+  privateIPAddress: vmIp
+}
 
 resource vmName_netInt01 'Microsoft.Network/networkInterfaces@2020-11-01' = {
   name: '${vmName}-netInt01'
@@ -13,13 +37,7 @@ resource vmName_netInt01 'Microsoft.Network/networkInterfaces@2020-11-01' = {
     ipConfigurations: [
       {
         name: 'ipConfig1${vmName}'
-        properties: {
-          privateIPAllocationMethod: 'Static'
-          subnet: {
-            id: snetId
-          }
-          privateIPAddress: vmIp
-        }
+        properties: createPublicIP ? union( publicIpProps, privateIpProps) : privateIpProps
       }
     ]
   }
@@ -56,6 +74,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2021-03-01' = {
         {
           id: vmName_netInt01.id
         }
+        // networkInterfaces: nics
       ]
     }
     diagnosticsProfile: {

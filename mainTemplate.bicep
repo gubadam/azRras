@@ -50,6 +50,7 @@ module vmADDS 'templates/vm.bicep' = {
     snetId: resourceId('Microsoft.Network/virtualNetworks/subnets', VnetParameters.vnetName, VnetParameters.subnetName)
     adminUsername: ADDSParameters.adminUsername
     adminPassword: ADDSParameters.adminPassword
+    createPublicIP: false
   }
   dependsOn: [
     vnet
@@ -64,6 +65,7 @@ module vmADCS 'templates/vm.bicep' = {
     snetId: resourceId('Microsoft.Network/virtualNetworks/subnets', VnetParameters.vnetName, VnetParameters.subnetName)
     adminUsername: ADCSParameters.adminUsername
     adminPassword: ADCSParameters.adminPassword
+    createPublicIP: true
   }
   dependsOn: [
     vnet
@@ -78,6 +80,7 @@ module vmNPS 'templates/vm.bicep' = {
     snetId: resourceId('Microsoft.Network/virtualNetworks/subnets', VnetParameters.vnetName, VnetParameters.subnetName)
     adminUsername: NPSParameters.adminUsername
     adminPassword: NPSParameters.adminPassword
+    createPublicIP: false
   }
   dependsOn: [
     vnet
@@ -92,6 +95,7 @@ module vmRRAS 'templates/vm.bicep' = {
     snetId: resourceId('Microsoft.Network/virtualNetworks/subnets', VnetParameters.vnetName, VnetParameters.subnetName)
     adminUsername: RRASParameters.adminUsername
     adminPassword: RRASParameters.adminPassword
+    createPublicIP: true
   }
   dependsOn: [
     vnet
