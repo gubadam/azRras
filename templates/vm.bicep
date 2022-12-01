@@ -5,6 +5,8 @@ param adminUsername string
 param location string
 
 param createPublicIP bool
+param asgVpnId string = ''
+param asgRdpId string = ''
 
 @secure()
 param adminPassword string
@@ -21,6 +23,7 @@ var publicIpProps = {
   publicIPAddress: {
     id: publicIPAddress.id
   }
+  applicationSecurityGroups: createPublicIP ? [asgRdpId, asgVpnId] : []
 }
 
 var privateIpProps = {
@@ -75,7 +78,6 @@ resource vm 'Microsoft.Compute/virtualMachines@2021-03-01' = {
         {
           id: vmName_netInt01.id
         }
-        // networkInterfaces: nics
       ]
     }
     diagnosticsProfile: {
