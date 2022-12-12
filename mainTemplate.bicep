@@ -30,9 +30,11 @@ param RRASParameters object = {
   adminPassword: 'adminPassword'
 }
 
+param artifactsLocation string
+
 param location string = resourceGroup().location
 
-module vnet 'templates/vnet.bicep' = {
+module deployVnet 'templates/vnet.bicep' = {
   name: '${az.deployment().name}-vnet'
   params: {
     vnetName: VnetParameters.vnetName
@@ -43,7 +45,7 @@ module vnet 'templates/vnet.bicep' = {
   }
 }
 
-module vmADDS 'templates/vm.bicep' = {
+module deployVmADDS 'templates/vm.bicep' = {
   name: '${az.deployment().name}-vmADDS'
   params: {
     vmName: ADDSParameters.vmName
@@ -55,11 +57,11 @@ module vmADDS 'templates/vm.bicep' = {
     location: location
   }
   dependsOn: [
-    vnet
+    deployVnet
   ]
 }
 
-module vmADCS 'templates/vm.bicep' = {
+module deployVmADCS 'templates/vm.bicep' = {
   name: '${az.deployment().name}-vmADCS'
   params: {
     vmName: ADCSParameters.vmName
@@ -68,16 +70,16 @@ module vmADCS 'templates/vm.bicep' = {
     adminUsername: ADCSParameters.adminUsername
     adminPassword: ADCSParameters.adminPassword
     createPublicIP: true
-    asgVpnId: vnet.outputs.asgVpnId
-    asgRdpId: vnet.outputs.asgRdpId
+    asgVpnId: deployVnet.outputs.asgVpnId
+    asgRdpId: deployVnet.outputs.asgRdpId
     location: location
   }
   dependsOn: [
-    vnet
+    deployVnet
   ]
 }
 
-module vmNPS 'templates/vm.bicep' = {
+module deployVmNPS 'templates/vm.bicep' = {
   name: '${az.deployment().name}-vmNPS'
   params: {
     vmName: NPSParameters.vmName
@@ -89,11 +91,11 @@ module vmNPS 'templates/vm.bicep' = {
     location: location
   }
   dependsOn: [
-    vnet
+    deployVnet
   ]
 }
 
-module vmRRAS 'templates/vm.bicep' = {
+module deployVmRRAS 'templates/vm.bicep' = {
   name: '${az.deployment().name}-vmRRAS'
   params: {
     vmName: RRASParameters.vmName
@@ -102,11 +104,48 @@ module vmRRAS 'templates/vm.bicep' = {
     adminUsername: RRASParameters.adminUsername
     adminPassword: RRASParameters.adminPassword
     createPublicIP: true
-    asgVpnId: vnet.outputs.asgVpnId
-    asgRdpId: vnet.outputs.asgRdpId
+    asgVpnId: deployVnet.outputs.asgVpnId
+    asgRdpId: deployVnet.outputs.asgRdpId
     location: location
   }
   dependsOn: [
-    vnet
+    deployVnet
   ]
+}
+
+resource vmADDS 'Microsoft.Compute/virtualMachines@2020-12-01' existing = {
+  name: ADDSParameters.vmName
+}
+
+resource dsc 'Microsoft.Compute/virtualMachines/extensions@2020-12-01' = {
+  parent: vmADDS
+  name: '${ADDSParameters.vmName}-DSC'
+  location: location
+  dependsOn: [
+    deployVmADDS
+  ]
+  properties: {
+    publisher: 'Microsoft.Powershell'
+    type: 'DSC'
+    typeHandlerVersion: '2.9'
+    autoUpgradeMinorVersion: true
+    settings: {
+      configuration: {
+        url: '${artifactsLocation}/DSC/CreateADPDC.zip'
+        script: 'CreateADPDC.ps1'
+        function: 'CreateADPDC'
+      }
+      configurationArguments: {
+        DomainName: ADDSParameters.dnsPrefix
+      }
+    }
+    protectedSettings: {
+      configurationArguments: {
+        AdminCreds: {
+          UserName: ADDSParameters.adminUsername
+          Password: ADDSParameters.adminPassword
+        }
+      }
+    }
+  }
 }

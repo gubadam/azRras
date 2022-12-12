@@ -42,6 +42,9 @@
                 "adminUsername": "adminUsername",
                 "adminPassword": "adminPassword123"
             }
+        },
+        "artifactsLocation": {
+            "value": "https://github.com/gubadam/azRras/raw/testing"
         }
     }
 }
