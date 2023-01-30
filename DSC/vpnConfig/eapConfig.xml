@@ -1,7 +1,7 @@
 <EapHostConfig xmlns="http://www.microsoft.com/provisioning/EapHostConfig">
 	<EapMethod>
 		<Type xmlns="http://www.microsoft.com/provisioning/EapCommon">
-			13
+			25
 		</Type>
 		<VendorId xmlns="http://www.microsoft.com/provisioning/EapCommon">
 			0
@@ -16,16 +16,9 @@
 	<Config xmlns="http://www.microsoft.com/provisioning/EapHostConfig">
 		<Eap xmlns="http://www.microsoft.com/provisioning/BaseEapConnectionPropertiesV1">
 			<Type>
-				13
+				25
 			</Type>
-			<EapType xmlns="http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV1">
-				<CredentialsSource>
-					<CertificateStore>
-						<SimpleCertSelection>
-							true
-						</SimpleCertSelection>
-					</CertificateStore>
-				</CredentialsSource>
+			<EapType xmlns="http://www.microsoft.com/provisioning/MsPeapConnectionPropertiesV1">
 				<ServerValidation>
 					<DisableUserPromptForServerValidation>
 						false
@@ -33,15 +26,56 @@
 					<ServerNames>
 					</ServerNames>
 				</ServerValidation>
-				<DifferentUsername>
+				<FastReconnect>
+					true
+				</FastReconnect>
+				<InnerEapOptional>
 					false
-				</DifferentUsername>
-				<PerformServerValidation xmlns="http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2">
+				</InnerEapOptional>
+				<Eap xmlns="http://www.microsoft.com/provisioning/BaseEapConnectionPropertiesV1">
+					<Type>
+						13
+					</Type>
+					<EapType xmlns="http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV1">
+						<CredentialsSource>
+							<CertificateStore>
+								<SimpleCertSelection>
+									true
+								</SimpleCertSelection>
+							</CertificateStore>
+						</CredentialsSource>
+						<ServerValidation>
+							<DisableUserPromptForServerValidation>
+								false
+							</DisableUserPromptForServerValidation>
+							<ServerNames>
+							</ServerNames>
+						</ServerValidation>
+						<DifferentUsername>
+							false
+						</DifferentUsername>
+						<PerformServerValidation xmlns="http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2">
+							false
+						</PerformServerValidation>
+						<AcceptServerName xmlns="http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2">
+							false
+						</AcceptServerName>
+					</EapType>
+				</Eap>
+				<EnableQuarantineChecks>
 					false
-				</PerformServerValidation>
-				<AcceptServerName xmlns="http://www.microsoft.com/provisioning/EapTlsConnectionPropertiesV2">
+				</EnableQuarantineChecks>
+				<RequireCryptoBinding>
 					false
-				</AcceptServerName>
+				</RequireCryptoBinding>
+				<PeapExtensions>
+					<PerformServerValidation xmlns="http://www.microsoft.com/provisioning/MsPeapConnectionPropertiesV2">
+						false
+					</PerformServerValidation>
+					<AcceptServerName xmlns="http://www.microsoft.com/provisioning/MsPeapConnectionPropertiesV2">
+						false
+					</AcceptServerName>
+				</PeapExtensions>
 			</EapType>
 		</Eap>
 	</Config>
