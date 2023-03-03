@@ -3,3 +3,6 @@ todo.md
 notes.md
 test.json
 DSC/CreateADPDC/*
+DSC/CreateADPDC/test/*
+DSC/DomainJoin/*
+scripts/*

@@ -5,15 +5,14 @@ param snetIPRange string
 param location string
 param asgVpnName string = 'asgVpn'
 param asgRdpName string = 'asgRdp'
+param dnsServer string
 
-resource asgVPN 'Microsoft.Network/applicationSecurityGroups@2020-11-01' = {
+resource asgVPN 'Microsoft.Network/applicationSecurityGroups@2020-11-01' existing = {
   name: asgVpnName
-  location: location
 }
 
-resource asgRDP 'Microsoft.Network/applicationSecurityGroups@2020-11-01' = {
+resource asgRDP 'Microsoft.Network/applicationSecurityGroups@2020-11-01' existing = {
   name: asgRdpName
-  location: location
 }
 
 resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2019-11-01' = {
@@ -81,6 +80,11 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
         }
       }
     ]
+    dhcpOptions: {
+      dnsServers: [
+        dnsServer
+      ]
+    }
   }
 }
 
