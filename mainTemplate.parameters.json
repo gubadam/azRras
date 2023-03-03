@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "VnetParameters": {
@@ -24,7 +24,8 @@
                 "vmName": "vmAdcs",
                 "ipAddress": "10.0.0.5",
                 "adminUsername": "adminUsername",
-                "adminPassword": "adminPassword123"
+                "adminPassword": "adminPassword123",
+                "crlFqdn": "crl.guba.net.pl"
             }
         },
         "NPSParameters": {
@@ -40,7 +41,8 @@
                 "vmName": "vmRras",
                 "ipAddress": "10.0.0.7",
                 "adminUsername": "adminUsername",
-                "adminPassword": "adminPassword123"
+                "adminPassword": "adminPassword123",
+                "vpnFqdn": "vpn.guba.net.pl"
             }
         },
         "artifactsLocation": {
